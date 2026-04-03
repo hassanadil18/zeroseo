@@ -31,7 +31,7 @@ function renderBlogList() {
         const blogCard = document.createElement('div');
         blogCard.className = 'col-md-6 col-lg-4';
         blogCard.innerHTML = `
-            <article class="blog-card">
+            <article class="blog-card blog-card-link" role="link" tabindex="0" data-href="blog-single.html?post=${post.id}" aria-label="Read ${post.title}">
                 <div class="blog-featured-image">
                     <img src="${post.image}" alt="${post.title}" loading="lazy">
                 </div>
@@ -50,6 +50,23 @@ function renderBlogList() {
         `;
         
         blogGrid.appendChild(blogCard);
+    });
+
+    // Make entire blog card clickable while preserving inner link behavior
+    blogGrid.querySelectorAll('.blog-card-link').forEach((card) => {
+        card.addEventListener('click', (event) => {
+            if (event.target.closest('a')) return;
+            const href = card.getAttribute('data-href');
+            if (href) window.location.href = href;
+        });
+
+        card.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            if (event.target.closest('a')) return;
+            event.preventDefault();
+            const href = card.getAttribute('data-href');
+            if (href) window.location.href = href;
+        });
     });
 }
 
@@ -279,9 +296,132 @@ function validateContactForm() {
 // EMAIL JS INITIALIZATION & FORM SUBMISSION
 // ================================================
 
-// Initialize EmailJS (replace with your actual Public Key)
-// Sign up free at: https://www.emailjs.com
-emailjs.init('ZmHWrknXIJ28Mt4DK'); // Replace with your EmailJS Public Key
+const EMAILJS_CONFIG = {
+    publicKey: 'ZmHWrknXIJ28Mt4DK',
+    serviceId: 'service_c1rfvuj',
+    templateId: 'template_7yfmbg9',
+    recipientEmail: 'zero.seo.zs.10@gmail.com'
+};
+
+let emailJsReady = false;
+
+function getEmailJsClient() {
+    if (window.emailjs) return window.emailjs;
+    if (typeof emailjs !== 'undefined') return emailjs;
+    return null;
+}
+
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[src="${src}"]`);
+        if (existing) {
+            if (existing.dataset.loaded === 'true') {
+                resolve();
+                return;
+            }
+            existing.addEventListener('load', () => resolve(), { once: true });
+            existing.addEventListener('error', () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = () => {
+            script.dataset.loaded = 'true';
+            resolve();
+        };
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+        document.head.appendChild(script);
+    });
+}
+
+async function ensureEmailJsLoaded() {
+    if (getEmailJsClient()) return true;
+
+    const fallbackSources = [
+        'https://unpkg.com/@emailjs/browser@4/dist/email.min.js',
+        'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js'
+    ];
+
+    for (const src of fallbackSources) {
+        try {
+            await loadScript(src);
+            if (getEmailJsClient()) return true;
+        } catch (error) {
+            console.warn(error.message);
+        }
+    }
+
+    return false;
+}
+
+async function initEmailJs() {
+    const contactForm = document.getElementById('contactForm');
+    if (!contactForm) return false;
+
+    await ensureEmailJsLoaded();
+
+    const emailJsClient = getEmailJsClient();
+    if (!emailJsClient) {
+        console.error('EmailJS library not loaded.');
+        return false;
+    }
+
+    try {
+        emailJsClient.init(EMAILJS_CONFIG.publicKey);
+        emailJsReady = true;
+        return true;
+    } catch (error) {
+        console.error('Failed to initialize EmailJS:', error);
+        return false;
+    }
+}
+
+function getSubjectLabel(rawValue) {
+    const subjectMap = {
+        'software-development': 'Software Development',
+        'guest-posting': 'Guest Posting Services',
+        'blog-marketing': 'Blog Marketing',
+        'general-inquiry': 'General Inquiry',
+        partnership: 'Partnership',
+        other: 'Other'
+    };
+
+    return subjectMap[rawValue] || rawValue || 'General Inquiry';
+}
+
+function initContactFormHandler() {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    form.addEventListener('submit', (event) => {
+        handleFormSubmit(event);
+    });
+}
+
+function showContactFormError(message) {
+    const successMessage = document.getElementById('successMessage');
+    if (!successMessage) {
+        alert(message);
+        return;
+    }
+
+    successMessage.classList.remove('alert-success');
+    successMessage.classList.add('alert-danger', 'show');
+    successMessage.style.display = 'block';
+    successMessage.innerHTML = `<strong>Error:</strong> ${message}`;
+}
+
+function showContactFormSuccess() {
+    const successMessage = document.getElementById('successMessage');
+    if (!successMessage) return;
+
+    successMessage.classList.remove('alert-danger');
+    successMessage.classList.add('alert-success', 'show');
+    successMessage.style.display = 'block';
+    successMessage.innerHTML = "<strong>Thank you!</strong> Your message has been sent successfully. We'll get back to you soon.";
+}
 
 async function handleFormSubmit(event) {
     event.preventDefault();
@@ -294,33 +434,79 @@ async function handleFormSubmit(event) {
     const form = document.getElementById('contactForm');
     const submitBtn = form.querySelector('button[type="submit"]');
     const successMessage = document.getElementById('successMessage');
+    const originalText = submitBtn.textContent;
+
+    if (!emailJsReady) {
+        await initEmailJs();
+    }
+
+    const emailJsClient = getEmailJsClient();
+    if (!emailJsReady || !emailJsClient) {
+        showContactFormError('Email service is not ready. Please check internet connection/ad-blocker and try again.');
+        return;
+    }
     
     try {
         // Show loading state
-        const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Sending...';
         
         // Prepare email data
+        const subjectRaw = form.querySelector('#subject').value;
+        const subjectLabel = getSubjectLabel(subjectRaw);
+        const userEmail = form.querySelector('#email').value.trim();
+        const userName = form.querySelector('#name').value.trim();
+        const userMessage = form.querySelector('#message').value.trim();
+        const userPhone = (form.querySelector('#phone').value || '').trim() || 'Not provided';
+        const submittedAt = new Date().toLocaleString();
+        const fullMessageText = [
+            `Name: ${userName}`,
+            `Email: ${userEmail}`,
+            `Phone: ${userPhone}`,
+            `Subject: ${subjectLabel}`,
+            `Submitted At: ${submittedAt}`,
+            '',
+            'Message:',
+            userMessage
+        ].join('\n');
+
+        // Keep sender address trusted for providers that reject arbitrary "from" values.
+        // The visitor's email is preserved in reply_to/user_email for direct replies.
         const formData = {
-            from_name: form.querySelector('#name').value,
-            from_email: form.querySelector('#email').value,
-            phone: form.querySelector('#phone').value || 'Not provided',
-            subject: form.querySelector('#subject').value,
-            message: form.querySelector('#message').value,
-            to_email: 'zero.seo.zs.10@gmail.com' // Replace with your email
+            from_name: userName,
+            from_email: EMAILJS_CONFIG.recipientEmail,
+            reply_to: userEmail,
+            user_name: userName,
+            user_email: userEmail,
+            name: userName,
+            email: userEmail,
+            sender_email: userEmail,
+            phone: userPhone,
+            mobile: userPhone,
+            subject: subjectLabel,
+            subject_line: `Contact Form: ${subjectLabel}`,
+            subject_label: subjectLabel,
+            subject_value: subjectRaw,
+            message: fullMessageText,
+            user_message: userMessage,
+            message_html: fullMessageText.replace(/\n/g, '<br>'),
+            inquiry_type: subjectLabel,
+            source: 'Website Contact Form',
+            to_email: EMAILJS_CONFIG.recipientEmail,
+            to_name: 'zeroseo',
+            submitted_at: submittedAt
         };
         
         // Send email using EmailJS
-        const response = await emailjs.send(
-            'service_jug609a',    // Replace with your Service ID
-            'template_7yfmbg9',   // Replace with your Template ID
+        const response = await emailJsClient.send(
+            EMAILJS_CONFIG.serviceId,
+            EMAILJS_CONFIG.templateId,
             formData
         );
         
         if (response.status === 200) {
             // Show success message
-            successMessage.style.display = 'block';
+            showContactFormSuccess();
             form.reset();
             
             // Remove validation classes
@@ -334,8 +520,10 @@ async function handleFormSubmit(event) {
             }, 6000);
         }
     } catch (error) {
+        const errorStatus = error?.status || 'unknown';
+        const errorText = error?.text || error?.message || 'Unknown EmailJS error';
         console.error('Error sending email:', error);
-        alert('Error sending message. Please try again or contact us directly at zero.seo.zs.10@gmail.com');
+        showContactFormError(`Error sending message (${errorStatus}): ${errorText}`);
     } finally {
         // Restore button state
         submitBtn.disabled = false;
@@ -507,6 +695,10 @@ function animateCounter(element, target, duration = 2000) {
 // INITIALIZE ALL FEATURES ON PAGE LOAD
 // ================================================
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize EmailJS only when contact form exists
+    initEmailJs();
+    initContactFormHandler();
+
     // Set active nav link
     setActiveNavLink();
     

@@ -35,7 +35,7 @@
     --gray-50: #f9fafb;
     
     /* Typography */
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
     --font-size-base: 1rem;
     --font-size-lg: 1.125rem;
     --font-size-sm: 0.875rem;
@@ -63,11 +63,25 @@ html {
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif !important;
     font-size: var(--font-size-base);
     line-height: 1.6;
     color: var(--dark-color);
     background-color: var(--white-color);
+}
+
+/* Keep Font Awesome icons using their own font family. */
+.fa,
+.fas,
+.fa-solid {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+}
+
+.fab,
+.fa-brands {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400 !important;
 }
 
 /* ================================================
@@ -181,7 +195,6 @@ a:hover {
 }
 
 .navbar-logo {
-    max-height: 40px;
     width: auto;
     display: block;
 }
@@ -231,7 +244,10 @@ a:hover {
    HERO SECTION
    ================================================ */
 .hero-section {
-    background: #0d2d5f !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     position: relative;
     overflow: hidden;
     min-height: 100vh;
@@ -245,25 +261,13 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #0d2d5f;
+    background: rgba(13, 45, 95, 0.6);
     z-index: 100;
     animation: shutterWipeOpen 1.5s ease-in-out forwards;
 }
 
 .hero-section::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('../images/hero-image.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    opacity: 0.10;
-    z-index: 0;
+    display: none;
 }
 
 .hero-section .container {
@@ -382,8 +386,6 @@ a:hover {
         opacity: 1;
     }
 }
-    }
-}
 
 .min-vh-75 {
     min-height: 75vh;
@@ -434,7 +436,14 @@ a:hover {
 .service-list,
 .service-features {
     list-style: none;
+    padding-left: 0;
+    margin-left: 0;
     margin: 1.5rem 0;
+}
+
+.service-list li::marker,
+.service-features li::marker {
+    content: "";
 }
 
 .service-list li,
@@ -737,9 +746,18 @@ a:hover {
     transform: translateY(-8px);
 }
 
-.blog-featured-image {
+.blog-card-link {
+    cursor: pointer;
+}
+
+.blog-card-link:focus-visible {
+    outline: 3px solid rgba(30, 58, 138, 0.45);
+    outline-offset: 3px;
+}
+
+.blog-card .blog-featured-image {
     width: 100%;
-    height: 250px;
+    height: 180px;
     background-color: var(--gray-200);
     overflow: hidden;
     display: flex;
@@ -747,7 +765,7 @@ a:hover {
     justify-content: center;
 }
 
-.blog-featured-image img {
+.blog-card .blog-featured-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -813,12 +831,12 @@ a:hover {
     min-height: 800px;
 }
 
-.blog-featured-image {
+.blog-post-section .blog-featured-image {
     background-color: #f0f0f0;
     min-height: 400px;
 }
 
-.blog-featured-image img {
+.blog-post-section .blog-featured-image img {
     max-width: 100%;
     height: auto;
 }
@@ -1053,12 +1071,50 @@ a:hover {
    PAGE HEADER
    ================================================ */
 .page-header {
-    background-color: var(--gray-50);
+    position: relative;
+    overflow: hidden;
+    background-image: url('../images/hero-bg.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     border-bottom: 1px solid var(--gray-200);
 }
 
+.page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 45, 95, 0.65);
+    z-index: 0;
+}
+
+.page-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 45, 95, 0.95);
+    z-index: 1;
+    animation: shutterWipeOpen 1.5s ease-in-out forwards;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.9s ease-out 0.35s both;
+}
+
 .page-header h1 {
-    color: var(--dark-color);
+    color: #ffffff;
+}
+
+.page-header p,
+.page-header .lead,
+.page-header .text-muted {
+    color: #e8eef5 !important;
 }
 
 /* ================================================
@@ -1283,8 +1339,8 @@ footer hr {
         gap: 1rem;
     }
 
-    .blog-featured-image {
-        height: 200px;
+    .blog-card .blog-featured-image {
+        height: 160px;
     }
 
     .feature-item {

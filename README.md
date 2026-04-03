@@ -30,7 +30,7 @@ We offer a wide range of professional services including:
 ✅ **Transparent Communication** - Clear collaboration and regular updates  
 ✅ **Competitive Pricing** - Professional services at competitive rates  
 ✅ **Proven Track Record** - Successful projects delivered to satisfied clients  
-✅ **Ongoing Support** - Dedicated support after project completion  
+✅ **Ongoing Support** - Dedicated support after project completion
 
 ## 🌐 Our Online Presence
 
@@ -46,12 +46,13 @@ Ready to transform your business with professional software solutions?
 - **Contact Us**: Visit our contact page on [zeroseo.tech](https://zeroseo.tech)
 - **Guest Posting**: Interested in publishing on our platform?
 - **Partnerships**: Explore collaboration opportunities
-│   │   └── guest-posting.html   # Guest posting services page
-│   └── contact/
-│       └── contact.html         # Contact page
-├── sitemap.xml                  # XML sitemap for SEO
-└── README.md                    # This file
-```
+  │ │ └── guest-posting.html # Guest posting services page
+  │ └── contact/
+  │ └── contact.html # Contact page
+  ├── sitemap.xml # XML sitemap for SEO
+  └── README.md # This file
+
+````
 
 ## ⚙️ Installation & Setup
 
@@ -108,7 +109,7 @@ Add a new object to the `blogPosts` array following this structure:
     featured: true,                                // true = show on homepage, false = blog list only
     image: "https://via.placeholder.com/800x400?text=Your+Title"  // Featured image URL
 }
-```
+````
 
 ### Step 3: Save and Refresh
 

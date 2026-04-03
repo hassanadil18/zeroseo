@@ -45,7 +45,7 @@ const blogPosts = [
         date: "2026-03-25",
         category: "Web Development",
         featured: true,
-        image: "https://via.placeholder.com/800x400?text=Web+Development"
+        image: "../../assets/images/blog/guide-modern-web-development-2026/featured.webp"
     },
     {
         id: 2,
@@ -88,7 +88,7 @@ const blogPosts = [
         date: "2026-03-20",
         category: "SEO",
         featured: true,
-        image: "https://via.placeholder.com/800x400?text=Guest+Posting"
+        image: "../../assets/images/blog/guest-posting-seo-strategy/featured.webp"
     },
     {
         id: 3,
@@ -122,7 +122,7 @@ const blogPosts = [
         date: "2026-03-18",
         category: "Development",
         featured: false,
-        image: "https://via.placeholder.com/800x400?text=Scalable+Apps"
+        image: "../../assets/images/blog/scalable-applications-tips/featured.webp"
     },
     {
         id: 4,
@@ -156,7 +156,7 @@ const blogPosts = [
         date: "2026-03-15",
         category: "Development",
         featured: false,
-        image: "https://via.placeholder.com/800x400?text=API+Design"
+        image: "../../assets/images/blog/api-design-best-practices/featured.webp"
     },
     {
         id: 5,
@@ -187,7 +187,7 @@ const blogPosts = [
         date: "2026-03-10",
         category: "Technology",
         featured: true,
-        image: "https://via.placeholder.com/800x400?text=AI+Development"
+        image: "../../assets/images/blog/future-ai-web-development/featured.webp"
     },
     {
         id: 6,
@@ -219,7 +219,7 @@ const blogPosts = [
         date: "2026-03-08",
         category: "Design",
         featured: false,
-        image: "https://via.placeholder.com/800x400?text=Mobile+First"
+        image: "../../assets/images/blog/mobile-first-design-guide/featured.webp"
     }
 ];
 
@@ -238,7 +238,7 @@ const blogPosts = [
  *    - date: Publication date (YYYY-MM-DD format)
  *    - category: Post category
  *    - featured: Boolean (true if you want to feature it on the homepage)
- *    - image: URL to the featured image
+ *    - image: Relative path to the featured image (recommended: ../../assets/images/blog/<slug>/featured.webp)
  * 
  * 3. Save the file
  * 4. The blog pages will automatically show the new post!
@@ -254,7 +254,7 @@ const blogPosts = [
  *     date: "2026-03-05",
  *     category: "Category Name",
  *     featured: true,
- *     image: "https://via.placeholder.com/800x400?text=Your+Post"
+ *     image: "../../assets/images/blog/your-new-post-title/featured.webp"
  * }
  * 
  * ===============================================
