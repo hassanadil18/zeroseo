@@ -170,7 +170,7 @@ Replace the emoji logo (⚙️) in the navbar with your own:
 
 Update these details in all pages:
 
-- Email: `zero.seo.zs.10@gmail.com` → your email
+- Email: `info@zeroseo.tech` → your email
 - Phone: `3104454719` → your phone
 - Address: Update in footer and contact page
 - Company name: Replace "zeroseo" with your company name
