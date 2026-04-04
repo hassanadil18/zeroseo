@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <style>
+      @keyframes rotateBorder {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .z-icon-border {
+        animation: rotateBorder 8s linear infinite;
+        transform-origin: 100px 100px;
+      }
+    </style>
+  </defs>
+  
+  <!-- Animated Border (subtle rotating effect) -->
+  <g class="z-icon-border" style="opacity: 0.2">
+    <circle cx="100" cy="100" r="95" fill="none" stroke="#000000" stroke-width="3" stroke-dasharray="8,4"/>
+  </g>
+  
+  <!-- Main Z Letter -->
+  <g id="z-letter">
+    <!-- Top horizontal line -->
+    <line x1="55" y1="50" x2="145" y2="50" stroke="#000000" stroke-width="18" stroke-linecap="round"/>
+    
+    <!-- Diagonal line (main character) -->
+    <line x1="145" y1="50" x2="55" y2="150" stroke="#000000" stroke-width="18" stroke-linecap="round"/>
+    
+    <!-- Bottom horizontal line -->
+    <line x1="55" y1="150" x2="145" y2="150" stroke="#000000" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Corner accent dots for premium look -->
+  <circle cx="60" cy="50" r="5" fill="#000000" opacity="0.6"/>
+  <circle cx="140" cy="150" r="5" fill="#000000" opacity="0.6"/>
+</svg>
