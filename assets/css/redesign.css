@@ -247,3 +247,36 @@ input:focus,select:focus,textarea:focus { border-color:var(--mint); outline-colo
 .sheet-status strong { margin-left:auto; color:var(--mint); font:700 .68rem Ubuntu,Manrope,sans-serif; letter-spacing:.1em; }
 .status-check { display:grid; place-items:center; width:20px; height:20px; color:#091109; border-radius:50%; background:var(--mint); font-weight:800; }
 @media (max-width:640px) { .roadmap-visual,.editorial-visual { min-height:380px; } .roadmap-track { transform:scale(.87); transform-origin:center; margin-left:-1rem; margin-right:-1rem; } }
+
+.whatsapp-float {
+  position:fixed;
+  right:1.25rem;
+  bottom:1.25rem;
+  z-index:60;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  color:#fff;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  box-shadow:0 12px 30px rgba(18,140,126,.28);
+  transition:transform .2s,box-shadow .2s;
+}
+.whatsapp-float:hover {
+  transform:translateY(-3px);
+  box-shadow:0 16px 36px rgba(18,140,126,.34);
+}
+.whatsapp-float svg {
+  width:28px;
+  height:28px;
+}
+@media (max-width:640px) {
+  .whatsapp-float {
+    right:1rem;
+    bottom:1rem;
+    width:54px;
+    height:54px;
+  }
+}

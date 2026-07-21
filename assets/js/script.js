@@ -38,6 +38,22 @@
     recent.innerHTML = window.blogPosts.filter((item) => item.id !== post.id).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4).map((item) => `<li><a href="blog-single.html?post=${item.id}">${item.title}</a></li>`).join('');
   }
 
+  function initCalendly() {
+    const triggers = document.querySelectorAll('[data-calendly]');
+    if (!triggers.length) return;
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        const url = trigger.getAttribute('data-calendly');
+        if (!url) return;
+        event.preventDefault();
+        const popup = window.open(url, '_blank', 'noopener,noreferrer,width=900,height=700');
+        if (!popup) {
+          window.location.href = url;
+        }
+      });
+    });
+  }
+
   function initContactForm() {
     const form = document.querySelector('#contactForm');
     if (!form) return;
@@ -65,9 +81,9 @@
         status.textContent = 'Thank you—your inquiry has been sent. We’ll be in touch soon.';
       } catch (error) {
         const body = `Name: ${name}\nEmail: ${email}\nCompany: ${company || 'Not provided'}\nInterest: ${subject}\n\n${message}`;
-        window.location.href = `mailto:info@zeroseo.tech?subject=${encodeURIComponent(`Website inquiry: ${subject}`)}&body=${encodeURIComponent(body)}`;
+        window.location.href = `mailto:zero.seo.zs.10@gmail.com?subject=${encodeURIComponent(`Website inquiry: ${subject}`)}&body=${encodeURIComponent(body)}`;
         status.className = 'form-status success';
-        status.textContent = 'Your email app is opening with your inquiry prepared. If it does not open, email us directly at info@zeroseo.tech.';
+        status.textContent = 'Your email app is opening with your inquiry prepared. If it does not open, email us directly at zero.seo.zs.10@gmail.com.';
       } finally {
         button.disabled = false;
         button.textContent = 'Send inquiry →';
@@ -93,5 +109,5 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', () => { initMenu(); renderBlogList(); renderBlogPost(); initContactForm(); });
+  document.addEventListener('DOMContentLoaded', () => { initMenu(); renderBlogList(); renderBlogPost(); initCalendly(); initContactForm(); });
 })();
