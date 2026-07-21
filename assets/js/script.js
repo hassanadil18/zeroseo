@@ -54,6 +54,54 @@
     });
   }
 
+  function initHeroChat() {
+    const chat = document.querySelector('.hero-chat');
+    if (!chat) return;
+
+    const sequence = [
+      { type: 'user', text: 'We miss bookings when calls come after hours.' },
+      { type: 'bot', typing: true },
+      { type: 'bot', text: 'We build appointment systems with instant online booking and smart intake forms.' },
+      { type: 'user', text: 'Can it send reminders and reduce no-shows?' },
+      { type: 'bot', typing: true },
+      { type: 'bot', text: 'Yes. We automate confirmations, WhatsApp/SMS reminders, and follow-ups to fill more slots.' }
+    ];
+
+    let index = 0;
+    let typingBubble = null;
+
+    const addMessage = () => {
+      if (index >= sequence.length) return;
+      const item = sequence[index];
+      index += 1;
+
+      if (item.typing) {
+        if (typingBubble) typingBubble.remove();
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble chat-bubble-assistant typing';
+        bubble.setAttribute('aria-label', 'Assistant is typing');
+        bubble.innerHTML = '<span></span><span></span><span></span>';
+        chat.appendChild(bubble);
+        typingBubble = bubble;
+        window.setTimeout(addMessage, 850);
+        return;
+      }
+
+      if (typingBubble) {
+        typingBubble.remove();
+        typingBubble = null;
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${item.type === 'user' ? 'chat-bubble-user' : 'chat-bubble-assistant'}`;
+      bubble.textContent = item.text;
+      chat.appendChild(bubble);
+      window.setTimeout(addMessage, item.type === 'user' ? 700 : 1050);
+    };
+
+    window.setTimeout(addMessage, 500);
+  }
+
   function initContactForm() {
     const form = document.querySelector('#contactForm');
     if (!form) return;
@@ -109,5 +157,5 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', () => { initMenu(); renderBlogList(); renderBlogPost(); initCalendly(); initContactForm(); });
+  document.addEventListener('DOMContentLoaded', () => { initMenu(); renderBlogList(); renderBlogPost(); initCalendly(); initHeroChat(); initContactForm(); });
 })();
